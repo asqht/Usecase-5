@@ -7,18 +7,29 @@ Original file is located at
     https://colab.research.google.com/drive/1yKucx2PJskFzgPSNYeD4dRBJM5XBwhX3
 """
 
-! pip install Streamlit
+#! pip install Streamlit
 
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# عنوان التطبيق
-st.title('مرحبًا بك في تطبيق Streamlit')
+# تحميل البيانات من ملف CSV
+sdf = pd.read_csv('data.csv')
 
-# نص تفاعلي
-st.write('هذا تطبيق بسيط باستخدام Streamlit!')
+# حساب المتوسط حسب المنطقة
+avg_exp_by_region = sdf.groupby('region')['exper_years'].mean()
 
-# إضافة مدخل للمستخدم
-name = st.text_input('أدخل اسمك:')
-if name:
-    st.write(f'مرحبًا {name}!')
+# إعداد واجهة المستخدم في Streamlit
+st.title('متوسط سنوات الخبرة حسب المنطقة')
+st.write("رسم بياني لعرض متوسط سنوات الخبرة في مختلف المناطق")
+
+# رسم البياني باستخدام Matplotlib
+plt.figure(figsize=(10, 6))
+plt.bar(avg_exp_by_region.index, avg_exp_by_region.values, color='skyblue')
+plt.xlabel('المنطقة')
+plt.ylabel('متوسط سنوات الخبرة')
+plt.title('متوسط سنوات الخبرة حسب المنطقة')
+
+# عرض الرسم البياني في Streamlit
+st.pyplot(plt)
 
